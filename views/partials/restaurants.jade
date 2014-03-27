@@ -1,11 +1,11 @@
 h3 We have found some restaurants based on your profile
 
-h4(class='well' id='timer') {{ timeUntilLunch | time}} 
-	span(ng-if='timeUntilLunch' class = 'label label-info') until lunch.
-	span(ng-if='!timeUntilLunch' class = 'label label-danger') {{ timeAfterLunch | time }} after lunch.
+div(class='well' id='timer') 
+	span(ng-if='timeUntilLunch' class = 'alert alert-info') {{ timeUntilLunch | time}} until lunch.
+	span(ng-if='!timeUntilLunch' class = 'alert alert-danger') {{ timeAfterLunch | time }} after lunch.
 
 ul(class='list-group' ng-repeat='rest in restaurants | orderBy: userDistance' id='restaurantList')
-	li(class='list-group-item') 
+	li(class='list-group-item' ng-click='showRestaurant($event, rest)') 
 		span {{ rest.name }} &nbsp;
 		span(ng-if='isPreferred(rest, userPreferences)' class='label label-success') Preferred
-		span(class='badge'){{ getDistance(userLocation, rest.location) | number:2  }} &nbsp; km
+		span(class='badge'){{ getDistance(userLocation, rest.location, 'mi') | number:2  }} mi

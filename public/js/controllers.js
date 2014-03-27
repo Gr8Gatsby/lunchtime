@@ -41,16 +41,6 @@ function updateModel(element_id, callback) {
     }
 }
 
-function updateModel2(element_id, callback) {
-	var sc = angular.element(document.getElementById(element_id)).scope();
-    
-	if(sc){
-	    sc.$apply(function(sc){
-	        callback(sc);
-	    });
-    }
-}
-
 /* Controllers */
 
 /*
@@ -58,26 +48,6 @@ function updateModel2(element_id, callback) {
  */
 function lunchtimeController($scope, socket) {
   
- //  	// Get the User Location in order to check for lunchtime resturants nearby
-	// function getUserLocation() {
-	// 	if(navigator.geolocation) {
-	// 		navigator.geolocation.getCurrentPosition(updateUserLocation);
-	// 	} else {
-	// 		// GeoLocation is not supported
-	// 		console.log('No GeoLocation');
-	// 	}
-	// }
-
-	// // Callback function to let the Node server know of the user's location
-	// function updateUserLocation(position) {
-	// 	console.log(position.coords.latitude);
-	// 	//socket.emit('client:userLocation', {latitude : position.coords.latitude, longitude : position.coords.longitude});
-
-	// }	
-
-	// Invoke the getUserLocation function
-	//getUserLocation();
-
 	// Check for the Server sending the users name
 	socket.on('send:name', function (data) {
 		$scope.name = data.name;
@@ -102,12 +72,6 @@ function restaurantsController($scope, socket) {
 	function updateUserLocation(position) {
 		console.log(position.coords.latitude);
 		$scope.userLocation = {latitude : position.coords.latitude, longitude : position.coords.longitude };	
-		// updateModel2('restaurantList', function(scope) {
-		// 	scope.userLocation = {latitude : position.coords.latitude, longitude : position.coords.longitude };	
-		// })
-		
-		//socket.emit('client:userLocation', {latitude : position.coords.latitude, longitude : position.coords.longitude});
-
 	}
 
 	// Invoke the getUserLocation function
@@ -128,12 +92,8 @@ function restaurantsController($scope, socket) {
 		$scope.userPreferences = data.userPreferences;
 	});
 
-	// socket.on('send:timeUntilLunch', function (data) {
-	// 	$scope.startTimer(data.timeUntilLunch);
-	// });
-
+	// Start the lunchtimer
 	requestAnimationFrame(timeLoop);
-
 
 	// Helper function to calculate the appoximate distance from an origin location to a destination
 	$scope.getDistance = function (originLocation, destinationLocation, units) {
@@ -157,15 +117,9 @@ function restaurantsController($scope, socket) {
 		return d;
 	}
 
-
-	// $scope.restaurantFormSubmit = function(){
-	// 	//Process user selection
-	// 	var form = document.restaurantForm;
-	// }
-
 	// Helper function to calculate the distance from the user to a restaurant
 	$scope.userDistance = function(rest) {
-		return $scope.getDistance($scope.userLocation, rest.location);
+		return $scope.getDistance($scope.userLocation, rest.location, 'mi');
 	}
 
 	// Helper function to find preffered restaurants
@@ -179,5 +133,9 @@ function restaurantsController($scope, socket) {
 			}
 		}
 		return false;
+	}
+
+	$scope.showRestaurant = function(event, rest) {
+		document.location.href='showRestaurant';
 	}
 }

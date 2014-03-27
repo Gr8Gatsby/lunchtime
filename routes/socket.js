@@ -23,7 +23,6 @@ module.exports = function (socket) {
 	socket.on('client:userLocation', function (data) {
 		//console.log("userLocation: " + data.latitude + ", " + data.longitude);
 		socket.emit('return:userLocation',data);
-		socket.disconnect();
 	});
 	
 };
